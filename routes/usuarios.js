@@ -4,6 +4,7 @@ var conn = require("../conn");
 
 var doctype = 'usuario';
 
+//obter todos os usuários
 router.get('/', function(req, res) {
 
   conn.couch.get(conn.dbName, '_design/usuarios/_view/todos').then(
@@ -17,6 +18,7 @@ router.get('/', function(req, res) {
 
 });
 
+//obter um usuário
 router.get('/:id', function(req, res){
   var id = req.params.id;
   conn.couch.get(conn.dbName, id).then(
@@ -29,6 +31,7 @@ router.get('/:id', function(req, res){
     });
 });
 
+// adicionar um usuário
 router.post('/add', function(req, res){
   var nome = req.body.nome;
   var email = req.body.email;
@@ -50,5 +53,47 @@ router.post('/add', function(req, res){
   });
   
 });
+
+// remover um usuário
+router.post('/delete/:id', function(req, res){
+  var id = req.params.id;
+  var rev = req.body.rev;
+
+  conn.couch.del(conn.dbName, id, rev).then(
+    function(data, headers, status){
+      res.send(`Usuário removido ${id}`);
+    }
+    ,function(err){
+      console.error(err);
+    });
+
+});
+
+// alterar usuário
+router.post('/update/:id', function(req, res){
+
+  var id = req.params.id;
+  var rev = req.body.rev;
+  var nome = req.body.nome;
+  var email = req.body.email;
+
+  var update = {
+    _id: id,
+    _rev: rev,
+    doc_type: doctype,
+    nome: nome,
+    email: email
+  };
+
+  conn.couch.update(conn.dbName, update).then(
+    function(data, headers, status){
+      res.send(`Usuário atualizado ${id}`);
+    },
+    function(err){
+      console.error(err);
+    });
+})
+
+
 
 module.exports = router;
