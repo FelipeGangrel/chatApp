@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
 });
 
 //obter um usuário
-router.get('/:id', function(req, res){
+router.get('/:id', function(req, res) {
   var id = req.params.id;
   conn.couch.get(conn.dbName, id).then(
     function(data, headers, status){
@@ -32,7 +32,7 @@ router.get('/:id', function(req, res){
 });
 
 // adicionar um usuário
-router.post('/add', function(req, res){
+router.post('/add', function(req, res) {
   var nome = req.body.nome;
   var email = req.body.email;
   conn.couch.uniqid().then(function(ids){
@@ -55,7 +55,7 @@ router.post('/add', function(req, res){
 });
 
 // remover um usuário
-router.post('/delete/:id', function(req, res){
+router.post('/delete/:id', function(req, res) {
   var id = req.params.id;
   var rev = req.body.rev;
 
@@ -70,7 +70,7 @@ router.post('/delete/:id', function(req, res){
 });
 
 // alterar usuário
-router.post('/update/:id', function(req, res){
+router.post('/update/:id', function(req, res) {
 
   var id = req.params.id;
   var rev = req.body.rev;
